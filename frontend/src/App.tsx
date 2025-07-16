@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Quotes from './pages/Quotes';
 import QuoteDetail from './components/Quotes/QuoteDetail';
 import Inventory from './pages/Inventory';
+import AviationInventory from './pages/AviationInventory';
 import AuthSuccess from './pages/AuthSuccess';
 
 const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
@@ -42,6 +43,7 @@ function App() {
             <Route path="quotes" element={<Quotes />} />
             <Route path="quotes/:id" element={<QuoteDetail />} />
             <Route path="inventory" element={<Inventory />} />
+            <Route path="aviation" element={<AviationInventory />} />
             <Route path="reports" element={<div>Reports (Coming Soon)</div>} />
             <Route path="settings" element={<div>Settings (Coming Soon)</div>} />
           </Route>

@@ -4,14 +4,18 @@ import {
   EnvelopeIcon, 
   CubeIcon, 
   CheckCircleIcon,
-  ClockIcon 
+  ClockIcon,
+  RocketLaunchIcon,
+  ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 import api from '../services/api';
+import aviationService, { DashboardStats } from '../services/aviation.service';
 import { Stats, InventoryStats } from '../types';
 
 const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<Stats | null>(null);
   const [inventoryStats, setInventoryStats] = useState<InventoryStats | null>(null);
+  const [aviationStats, setAviationStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,12 +24,14 @@ const Dashboard: React.FC = () => {
 
   const fetchStats = async () => {
     try {
-      const [quoteResponse, inventoryResponse] = await Promise.all([
+      const [quoteResponse, inventoryResponse, aviationStatsData] = await Promise.all([
         api.get('/quotes/stats'),
-        api.get('/inventory/stats')
+        api.get('/inventory/stats'),
+        aviationService.getStats()
       ]);
       setStats(quoteResponse.data.stats);
       setInventoryStats(inventoryResponse.data.stats);
+      setAviationStats(aviationStatsData);
     } catch (error) {
       console.error('Failed to fetch stats:', error);
     } finally {
@@ -98,7 +104,7 @@ const Dashboard: React.FC = () => {
         </dl>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="bg-white shadow rounded-lg p-6">
           <h2 className="text-lg font-medium text-gray-900 mb-4">
             Quick Actions
@@ -121,7 +127,7 @@ const Dashboard: React.FC = () => {
 
         <div className="bg-white shadow rounded-lg p-6">
           <h2 className="text-lg font-medium text-gray-900 mb-4">
-            Inventory Status
+            Excel Inventory Status
           </h2>
           <dl className="space-y-3">
             <div className="flex justify-between">
@@ -151,6 +157,64 @@ const Dashboard: React.FC = () => {
               </dd>
             </div>
           </dl>
+        </div>
+
+        <div className="bg-white shadow rounded-lg p-6">
+          <h2 className="text-lg font-medium text-gray-900 mb-4">
+            Aviation Inventory
+          </h2>
+          <dl className="space-y-3">
+            <div className="flex justify-between">
+              <dt className="text-sm font-medium text-gray-500">
+                <div className="flex items-center">
+                  <RocketLaunchIcon className="h-4 w-4 mr-1" />
+                  Total Parts
+                </div>
+              </dt>
+              <dd className="text-sm text-gray-900">
+                {aviationStats?.totalParts || 0}
+              </dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-sm font-medium text-gray-500">
+                <div className="flex items-center">
+                  <CubeIcon className="h-4 w-4 mr-1" />
+                  Inventory Items
+                </div>
+              </dt>
+              <dd className="text-sm text-gray-900">
+                {aviationStats?.totalInventoryItems || 0}
+              </dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-sm font-medium text-gray-500">
+                <div className="flex items-center">
+                  <ClockIcon className="h-4 w-4 mr-1" />
+                  Pending POs
+                </div>
+              </dt>
+              <dd className="text-sm text-gray-900">
+                {aviationStats?.pendingPurchaseOrders || 0}
+              </dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-sm font-medium text-gray-500">
+                <div className="flex items-center">
+                  <ExclamationTriangleIcon className="h-4 w-4 mr-1 text-yellow-500" />
+                  Low Stock Items
+                </div>
+              </dt>
+              <dd className="text-sm font-medium text-yellow-600">
+                {aviationStats?.lowStockItems || 0}
+              </dd>
+            </div>
+          </dl>
+          <Link
+            to="/aviation"
+            className="mt-4 block w-full text-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+          >
+            View Aviation Inventory
+          </Link>
         </div>
       </div>
     </div>

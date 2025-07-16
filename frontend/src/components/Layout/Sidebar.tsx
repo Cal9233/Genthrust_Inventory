@@ -6,12 +6,14 @@ import {
   CubeIcon,
   ChartBarIcon,
   Cog6ToothIcon,
+  RocketLaunchIcon,
 } from '@heroicons/react/24/outline';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: HomeIcon },
   { name: 'Quotes', href: '/quotes', icon: EnvelopeIcon },
   { name: 'Inventory', href: '/inventory', icon: CubeIcon },
+  { name: 'Aviation Inventory', href: '/aviation', icon: RocketLaunchIcon },
   { name: 'Reports', href: '/reports', icon: ChartBarIcon },
   { name: 'Settings', href: '/settings', icon: Cog6ToothIcon },
 ];
